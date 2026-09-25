@@ -1,0 +1,87 @@
+AI COMMAND BRIDGE - INFORMACOES DE INSTALACAO
+================================================
+
+O que eh este programa?
+-----------------------
+Um bridge local que permite que agentes de IA (ChatGPT, Codex, Work) executem
+comandos no CMD/PowerShell do seu Windows 10/11 de forma segura e controlada.
+
+COMO INSTALAR
+=============
+
+1. Execute AICommandBridge-Setup-1.0.0.exe
+2. Siga o instalador (clique em Next)
+3. Escolha a pasta de instalacao (padrao: C:\Program Files\AI Command Bridge)
+4. Marque opcoes desejadas:
+   - Desktop Shortcut: cria atalho na area de trabalho
+   - Auto-start: inicia automaticamente ao logar no Windows
+5. Conclua a instalacao
+
+COMO USAR
+=========
+
+1. Abra "AI Command Bridge" pelo menu Iniciar ou atalho da area de trabalho
+2. O programa abrira um servidor local em http://127.0.0.1:8765
+3. Configure os comandos permitidos em config.json
+4. Deixe rodando em background
+
+INTEGRACAO COM IA
+=================
+
+Para usar com ChatGPT, Codex ou outro agente:
+
+Endpoint: http://127.0.0.1:8765/execute
+Metodo: POST
+Content-Type: application/json
+
+Exemplo de JSON:
+{
+  "command": "dir C:\\Users",
+  "cwd": "C:\\Users"
+}
+
+Resposta:
+{
+  "ok": true,
+  "command": "dir C:\\Users",
+  "exit_code": 0,
+  "stdout": "...",
+  "stderr": "",
+  "cwd": "C:\\Users"
+}
+
+SEGURANCA
+=========
+
+Comandos permitidos por padrao:
+- git, npm, node, python, dir, type, copy, move, etc.
+
+Comandos bloqueados por padrao:
+- format, shutdown, delete, net user, reg delete, etc.
+
+EDITE config.json para:
+- Adicionar mais comandos permitidos (allowlist)
+- Adicionar mais comandos bloqueados (blocklist)
+- Mudar porta (padrao: 8765)
+- Exigir confirmacao antes de executar (require_confirmation: true)
+
+PORTA PADRAO
+============
+
+Servidor HTTP: 127.0.0.1:8765
+
+Se precisar mudar, edite config.json na pasta de instalacao.
+
+DESINSTALACAO
+=============
+
+1. Vá em Painel de Controle > Programas > Desinstalar um programa
+2. Encontre "AI Command Bridge"
+3. Clique em "Desinstalar"
+4. Confirme a remocao
+
+SUPORTE
+=======
+
+GitHub: https://github.com/alvesleiteevaldo-crypto/ai-command-auto-executor
+

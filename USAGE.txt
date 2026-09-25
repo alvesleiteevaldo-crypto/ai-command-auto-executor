@@ -1,0 +1,92 @@
+AI COMMAND BRIDGE v1.0.0
+======================
+
+Este programa está rodando e aguardando comandos de uma IA.
+
+É SEGURO?
+---------
+Sim. Por padrão, apenas comandos permitidos são executados.
+Comandos perigosos são bloqueados automaticamente.
+
+COMO USAR
+---------
+
+1. Deixe este programa rodando em background
+2. Configure sua IA (ChatGPT, Codex, etc.) para chamar:
+   
+   POST http://127.0.0.1:8765/execute
+   {
+     "command": "seu_comando_aqui",
+     "cwd": "C:\\caminho"
+   }
+
+3. O programa vai executar o comando no CMD/PowerShell
+4. Vai retornar a saída em JSON
+
+CONFIGURAR
+----------
+
+Edite o arquivo config.json na pasta de instalação:
+
+- allowlist: comandos permitidos
+- blocklist: comandos bloqueados  
+- port: porta do servidor (8765)
+- strict_mode: se true, só executa comandos na allowlist
+- require_confirmation: se true, pede confirmação antes de executar
+
+EXEMPLOS
+--------
+
+1. Executar dir:
+   {
+     "command": "dir C:\\Users",
+     "cwd": "C:\\Users"
+   }
+
+2. Instalar npm:
+   {
+     "command": "npm install express",
+     "cwd": "C:\\meu_projeto"
+   }
+
+3. Clonar repositório:
+   {
+     "command": "git clone https://github.com/user/repo.git",
+     "cwd": "C:\\projetos"
+   }
+
+PORTA
+-----
+
+Servidor roda em: http://127.0.0.1:8765
+
+Teste com: http://127.0.0.1:8765/health
+
+SEGURANCA - LISTA BRANCA
+------------------------
+
+Com strict_mode: true, só funcionam:
+
+git, npm, node, python, py, dir, type, copy, move,
+mkdir, rmdir, cd, echo, where, cls, ipconfig, whoami,
+systeminfo, curl, powershell, start
+
+SEGURANCA - LISTA NEGRA
+------------------------
+
+Sempre bloqueados:
+
+format, shutdown, restart, poweroff, del /f /q c:,
+rd /s /q, rmdir /s /q, net user, net localgroup,
+sc delete, reg delete, taskkill /f, diskpart
+
+PARADA
+------
+
+Pressione CTRL+C no terminal para parar o servidor.
+
+INFO
+----
+
+GitHub: https://github.com/alvesleiteevaldo-crypto/ai-command-auto-executor
+
