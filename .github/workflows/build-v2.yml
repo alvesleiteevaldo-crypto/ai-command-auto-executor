@@ -1,0 +1,57 @@
+name: Build AI Command Bridge 2.0
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main\n      - v2-seguro-instalavel
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        shell: pwsh
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-v2.txt
+
+      - name: Validate source
+        shell: pwsh
+        run: |
+          python -m py_compile ai_bridge_v2.pyw
+
+      - name: Build EXE
+        shell: pwsh
+        run: |
+          python -m PyInstaller --noconfirm --clean --onefile --windowed --name AICommandBridge ai_bridge_v2.pyw
+
+      - name: Install Inno Setup
+        shell: pwsh
+        run: |
+          choco install innosetup -y --no-progress
+
+      - name: Build installer
+        shell: pwsh
+        run: |
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "installer-v2.iss"
+
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: AICommandBridge-Windows10-11-x64
+          path: dist/AICommandBridge.exe
+
+      - name: Upload Setup
+        uses: actions/upload-artifact@v4
+        with:
+          name: AICommandBridge-Setup-2.0.0
+          path: dist/installer/AICommandBridge-Setup-2.0.0.exe
