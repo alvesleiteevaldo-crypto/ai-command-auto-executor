@@ -1,0 +1,32 @@
+AI COMMAND BRIDGE 2.0
+=====================
+
+Aplicativo local para Windows 10/11.
+
+SEGURANÇA
+- Escuta somente em 127.0.0.1
+- Cada execução exige o token local
+- Confirmação por comando ativada por padrão
+- Lista permitida por nome exato do executável
+- Bloqueio de operadores de shell (&, |, >, <, ^)
+- Pasta de trabalho limitada às pastas configuradas
+- Configuração fica em:
+  %APPDATA%\AICommandBridge\config.json
+
+ENDPOINT
+POST http://127.0.0.1:8765/execute
+Header:
+X-AI-Bridge-Token: SEU_TOKEN
+
+JSON:
+{
+  "command": "git status",
+  "cwd": "C:\\Users\\SeuUsuario\\Projeto"
+}
+
+TESTE
+GET http://127.0.0.1:8765/health
+
+IMPORTANTE
+O ChatGPT na nuvem não acessa automaticamente o localhost do seu PC.
+É necessário um cliente/conector local que envie a requisição para este bridge.
