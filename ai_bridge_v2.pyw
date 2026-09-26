@@ -111,7 +111,13 @@ def split_command(command: str) -> List[str]:
     if any(tok in lowered.split() for tok in BLOCKED_TOKENS):
         raise PermissionError("Comando bloqueado por segurança.")
     try:
-        return shlex.split(command, posix=False)
+        parts = shlex.split(command, posix=False)
+        cleaned = []
+        for part in parts:
+            if len(part) >= 2 and part[0] == part[-1] and part[0] in ("\"", "'"):
+                part = part[1:-1]
+            cleaned.append(part)
+        return cleaned
     except ValueError as exc:
         raise ValueError(f"Comando inválido: {exc}")
 
