@@ -1,62 +1,56 @@
-# ai-command-auto-executor
+# AI Command Bridge 2.0
 
-Programa local para receber comandos de uma IA e executá-los automaticamente no CMD/PowerShell do Windows.
+Aplicativo local para Windows 10/11 que recebe solicitações de automação em JSON e executa somente comandos permitidos.
 
-Funciona como um bridge entre a IA e o terminal do PC.
+## Segurança da versão 2.0
 
-O que ele faz:
-- recebe um comando em JSON via HTTP
-- valida segurança
-- executa no CMD/PowerShell
-- retorna stdout, stderr e código de saída
+- servidor preso a `127.0.0.1`
+- token local obrigatório no header `X-AI-Bridge-Token`
+- confirmação visual por comando ativada por padrão
+- allowlist por nome exato do executável
+- bloqueio de operadores de shell como `& | > < ^`
+- restrição da pasta de trabalho às áreas permitidas
+- limite do corpo HTTP e timeout de execução
+- configuração salva em `%APPDATA%\AICommandBridge\config.json`
 
-Como usar:
-
-1. Abra o terminal e rode:
+## Executar em desenvolvimento
 
 ```powershell
-python ai_bridge.py
+python ai_bridge_v2.pyw
 ```
 
-2. Em seguida, use o endpoint:
+## Compilar no Windows
 
-- GET http://127.0.0.1:8765/health
-- POST http://127.0.0.1:8765/execute
+Dê dois cliques em:
 
-Exemplo de JSON:
+`build_exe.bat`
+
+Ele cria:
+
+- `dist\AICommandBridge.exe`
+- `dist\installer\AICommandBridge-Setup-2.0.0.exe` quando Inno Setup 6 estiver instalado.
+
+## API
+
+Teste:
+
+`GET http://127.0.0.1:8765/health`
+
+Execução:
+
+`POST http://127.0.0.1:8765/execute`
+
+Header:
+
+`X-AI-Bridge-Token: <token mostrado pelo aplicativo>`
+
+JSON:
 
 ```json
 {
-  "command": "dir C:\\Users",
-  "cwd": "C:\\Users"
+  "command": "git status",
+  "cwd": "C:\\Users\\SeuUsuario\\Projeto"
 }
 ```
 
-3. Resposta:
-
-```json
-{
-  "ok": true,
-  "command": "dir C:\\Users",
-  "exit_code": 0,
-  "stdout": "...",
-  "stderr": "",
-  "cwd": "C:\\Users"
-}
-```
-
-Segurança:
-- lista branca (`allowlist`)
-- lista negra (`blocklist`)
-- bloqueia comandos perigosos por padrão
-- recomendado usar em ambiente local controlado
-
-Para integrar com seu agente local:
-- a IA pode chamar `http://127.0.0.1:8765/execute` com o comando solicitado
-- o bridge executa no shell
-- o resultado volta em JSON
-
-Observação:
-- este projeto é um starter seguro para execução local
-- não execute como administrador sem revisar a lista permitida
-
+> O bridge é local. Um ChatGPT executando na nuvem não alcança automaticamente `127.0.0.1`; é necessário um cliente ou conector local que envie as requisições para ele.
